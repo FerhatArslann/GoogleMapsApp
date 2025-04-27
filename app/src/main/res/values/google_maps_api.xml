@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--
+    HUOM: Ennen sovelluksen käyttämistä sinun täytyy:
+    1. Hankkia Google Maps API-avain Google Cloud Consolesta
+    2. Korvata alla oleva arvo omalla API-avaimellasi
+
+    Ohjeet avaimen hankkimiseen:
+    https://developers.google.com/maps/documentation/android-sdk/get-api-key
+    -->
+    <string name="google_maps_key" templateMergeStrategy="preserve" translatable="false">YOUR_API_KEY_HERE</string>
+</resources>

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Place Saver</string>
+    <string name="place_name_hint">Paikan nimi/kuvaus</string>
+    <string name="latitude_hint">Leveysaste (vain luku)</string>
+    <string name="longitude_hint">Pituusaste (vain luku)</string>
+    <string name="save_button">Tallenna paikka</string>
+    <string name="search_hint">Etsi paikkoja</string>
+    <string name="place_saved">Paikka tallennettu</string>
+    <string name="place_removed">Paikka poistettu</string>
+    <string name="error_saving_place">Virhe tallennettaessa paikkaa</string>
+    <string name="error_removing_place">Virhe poistettaessa paikkaa</string>
+    <string name="map_not_ready">Kartta ei ole vielä valmis</string>
+    <string name="no_place_name">Anna paikalle nimi</string>
+</resources>
