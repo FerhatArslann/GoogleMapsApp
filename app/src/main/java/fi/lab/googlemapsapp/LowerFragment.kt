@@ -68,9 +68,17 @@ class LowerFragment : Fragment(), OnMapReadyCallback {
     override fun onMapReady(googleMap: GoogleMap) {
         map = googleMap
 
+        // Aseta kartan asetukset
+        map?.apply {
+            mapType = GoogleMap.MAP_TYPE_NORMAL
+            uiSettings.isZoomControlsEnabled = true
+            uiSettings.isCompassEnabled = true
+            uiSettings.isMapToolbarEnabled = true
+        }
+
         // Aseta oletussijainti Suomeen (Helsinki)
-        val defaultLocation = LatLng(60.1699, 24.9384)
-        map?.moveCamera(CameraUpdateFactory.newLatLngZoom(defaultLocation, 10f))
+        val defaultLocation = LatLng(60.9827, 25.6612)
+        map?.moveCamera(CameraUpdateFactory.newLatLngZoom(defaultLocation, 12f))
 
         // Aseta kartan klikkauksen kuuntelija
         map?.setOnMapClickListener { latLng ->
@@ -100,6 +108,10 @@ class LowerFragment : Fragment(), OnMapReadyCallback {
                 }
             }
         }
+
+        // Kartan zoomaus
+        map?.uiSettings?.isZoomGesturesEnabled = true
+        map?.uiSettings?.isScrollGesturesEnabled = true
 
         // Lataa tallennetut paikat tietokannasta
         loadPlacesFromDatabase()

@@ -8,5 +8,7 @@
     Ohjeet avaimen hankkimiseen:
     https://developers.google.com/maps/documentation/android-sdk/get-api-key
     -->
+    <!-- Tämä on kommentoitu pois, koska API-avain on jo määritelty strings.xml-tiedostossa
     <string name="google_maps_key" templateMergeStrategy="preserve" translatable="false">YOUR_API_KEY_HERE</string>
+    -->
 </resources>
