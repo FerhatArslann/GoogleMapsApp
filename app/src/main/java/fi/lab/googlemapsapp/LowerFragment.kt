@@ -1,5 +1,6 @@
 package fi.lab.googlemapsapp
 
+import android.app.AlertDialog
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -74,9 +75,11 @@ class LowerFragment : Fragment(), OnMapReadyCallback {
             uiSettings.isZoomControlsEnabled = true
             uiSettings.isCompassEnabled = true
             uiSettings.isMapToolbarEnabled = true
+            uiSettings.isZoomGesturesEnabled = true
+            uiSettings.isScrollGesturesEnabled = true
         }
 
-        // Aseta oletussijainti Suomeen (Helsinki)
+        // Aseta oletussijainti Lahteen
         val defaultLocation = LatLng(60.9827, 25.6612)
         map?.moveCamera(CameraUpdateFactory.newLatLngZoom(defaultLocation, 12f))
 
@@ -94,27 +97,37 @@ class LowerFragment : Fragment(), OnMapReadyCallback {
             true
         }
 
-        // Aseta infoikkunan klikkauksen kuuntelija paikkojen poistamiselle (Grade 5 -ominaisuus)
+        // Aseta infoikkunan klikkauksen kuuntelija paikkojen poistamiselle
         map?.setOnInfoWindowClickListener { marker ->
-            // Kaksoisklikkauksella (tai pitkällä klikkauksella) poistetaan paikka
+            // Poistetaan paikka kun infoikkunaa klikataan
             val placeId = markerPlaceMap[marker]
             if (placeId != null) {
-                if (placesManager.deletePlace(placeId) > 0) {
-                    marker.remove()
-                    markerPlaceMap.remove(marker)
-                    Toast.makeText(context, "Paikka poistettu", Toast.LENGTH_SHORT).show()
-                } else {
-                    Toast.makeText(context, "Virhe paikan poistamisessa", Toast.LENGTH_SHORT).show()
-                }
+                showDeleteConfirmationDialog(marker, placeId)
             }
         }
 
-        // Kartan zoomaus
-        map?.uiSettings?.isZoomGesturesEnabled = true
-        map?.uiSettings?.isScrollGesturesEnabled = true
-
         // Lataa tallennetut paikat tietokannasta
         loadPlacesFromDatabase()
+    }
+
+    /**
+     * Näyttää vahvistusdialogin paikan poistamisesta
+     */
+    private fun showDeleteConfirmationDialog(marker: Marker, placeId: Long) {
+        val builder = AlertDialog.Builder(requireContext())
+        builder.setTitle("Poista paikka")
+            .setMessage("Haluatko varmasti poistaa tämän paikan?")
+            .setPositiveButton("Poista") { _, _ ->
+                if (placesManager.deletePlace(placeId) > 0) {
+                    marker.remove()
+                    markerPlaceMap.remove(marker)
+                    Toast.makeText(context, getString(R.string.place_removed), Toast.LENGTH_SHORT).show()
+                } else {
+                    Toast.makeText(context, getString(R.string.error_removing_place), Toast.LENGTH_SHORT).show()
+                }
+            }
+            .setNegativeButton("Peruuta", null)
+            .show()
     }
 
     /**
