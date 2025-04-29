@@ -52,6 +52,18 @@ class UpperFragment : Fragment() {
         editLongitude = view.findViewById(R.id.editLongitude)
         saveButton = view.findViewById(R.id.buttonSave)
 
+        // Hakuominaisuus
+        val editSearch = view.findViewById<EditText>(R.id.editSearch)
+        val buttonSearch = view.findViewById<Button>(R.id.buttonSearch)
+
+        buttonSearch.setOnClickListener {
+            val query = editSearch.text.toString().trim()
+            if (query.isNotEmpty()) {
+                // Kutsu MainActivity:n kautta hakutoimintoa
+                (activity as? MainActivity)?.searchPlaces(query)
+            }
+        }
+
         // Alusta tietokantahallinnan oliot
         placesHelper = PlacesDatabaseHelper(requireContext())
         placesManager = PlacesManager(placesHelper)

@@ -4,7 +4,7 @@ import android.os.Bundle
 import android.view.Menu
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
-import fi.lab.googlemapsapp.R
+import androidx.appcompat.widget.Toolbar
 
 /**
  * MainActivity on sovelluksen pääaktiviteetti.
@@ -27,9 +27,18 @@ class MainActivity : AppCompatActivity(),
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
+        val toolbar = findViewById<Toolbar>(R.id.toolbar)
+        setSupportActionBar(toolbar)
+
         // Alusta fragmentit, jos tämä on ensimmäinen luontikerta (ei konfiguraatiomuutos)
         if (savedInstanceState == null) {
             setupFragments()
+        }
+    }
+
+    fun searchPlaces(query: String) {
+        if (::lowerFragment.isInitialized) {
+            lowerFragment.searchPlaces(query)
         }
     }
 

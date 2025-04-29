@@ -79,7 +79,7 @@ class LowerFragment : Fragment(), OnMapReadyCallback {
             uiSettings.isScrollGesturesEnabled = true
         }
 
-        // Aseta oletussijainti Lahteen
+        // Aseta oletussijainti (Lahti)
         val defaultLocation = LatLng(60.9827, 25.6612)
         map?.moveCamera(CameraUpdateFactory.newLatLngZoom(defaultLocation, 12f))
 
@@ -97,7 +97,7 @@ class LowerFragment : Fragment(), OnMapReadyCallback {
             true
         }
 
-        // Aseta infoikkunan klikkauksen kuuntelija paikkojen poistamiselle
+        // Aseta infoikkunan paikkojen poistamiselle
         map?.setOnInfoWindowClickListener { marker ->
             // Poistetaan paikka kun infoikkunaa klikataan
             val placeId = markerPlaceMap[marker]
@@ -121,9 +121,14 @@ class LowerFragment : Fragment(), OnMapReadyCallback {
                 if (placesManager.deletePlace(placeId) > 0) {
                     marker.remove()
                     markerPlaceMap.remove(marker)
-                    Toast.makeText(context, getString(R.string.place_removed), Toast.LENGTH_SHORT).show()
+                    Toast.makeText(context, getString(R.string.place_removed), Toast.LENGTH_SHORT)
+                        .show()
                 } else {
-                    Toast.makeText(context, getString(R.string.error_removing_place), Toast.LENGTH_SHORT).show()
+                    Toast.makeText(
+                        context,
+                        getString(R.string.error_removing_place),
+                        Toast.LENGTH_SHORT
+                    ).show()
                 }
             }
             .setNegativeButton("Peruuta", null)
@@ -171,9 +176,11 @@ class LowerFragment : Fragment(), OnMapReadyCallback {
         val position = LatLng(place.latitude, place.longitude)
 
         // Lisää merkki kartalle
-        val marker = map?.addMarker(MarkerOptions()
-            .position(position)
-            .title(place.name))
+        val marker = map?.addMarker(
+            MarkerOptions()
+                .position(position)
+                .title(place.name)
+        )
 
         // Tallenna paikan ID merkin yhteyteen
         if (marker != null) {
@@ -199,29 +206,57 @@ class LowerFragment : Fragment(), OnMapReadyCallback {
      *
      * @param query Hakusana
      */
+    private var isSearching = false
+
     fun searchPlaces(query: String) {
-        if (map == null) {
+        if (map == null || isSearching) {
             return
         }
 
-        // Tyhjennä kartta ja lataa vain hakuehtoa vastaavat paikat
-        map?.clear()
-        markerPlaceMap.clear()
+        isSearching = true
 
-        // Hae hakusanaa vastaavat paikat
-        val places = placesManager.searchPlaces(query)
+        try {
+            // Hae hakusanaa vastaavat paikat
+            val places = placesManager.searchPlaces(query)
 
-        // Lisää merkki jokaiselle paikalle
-        for (place in places) {
-            addMarkerForPlace(place)
+            if (places.isNotEmpty()) {
+                // Kohdista ensimmäiseen löydettyyn paikkaan
+                val first = places[0]
+                val position = LatLng(first.latitude, first.longitude)
+                map?.animateCamera(CameraUpdateFactory.newLatLngZoom(position, 15f))
+
+                // Korosta hakutulokset esim. pompauttamalla infoikkunan
+                for (place in places) {
+                    // Etsi merkki, joka vastaa hakutulosta
+                    val marker = findMarkerForPlace(place.id)
+                    marker?.showInfoWindow()
+                }
+
+                // Näytä viesti hakutuloksista
+                Toast.makeText(
+                    context,
+                    "Löytyi ${places.size} paikkaa hakusanalla '$query'",
+                    Toast.LENGTH_SHORT
+                ).show()
+            } else {
+                Toast.makeText(context, "Ei hakutuloksia hakusanalla '$query'", Toast.LENGTH_SHORT).show()
+            }
+        } finally {
+            // Varmista että lippu nollataan aina
+            isSearching = false
         }
+    }
 
-        // Jos hakutuloksia on, kohdista ensimmäiseen
-        if (places.isNotEmpty()) {
-            val first = places[0]
-            val position = LatLng(first.latitude, first.longitude)
-            map?.animateCamera(CameraUpdateFactory.newLatLngZoom(position, 15f))
+    /**
+     * Etsii merkin paikan ID:n perusteella
+     */
+    private fun findMarkerForPlace(placeId: Long): Marker? {
+        for ((marker, id) in markerPlaceMap) {
+            if (id == placeId) {
+                return marker
+            }
         }
+        return null
     }
 
     /**
