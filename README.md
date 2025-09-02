@@ -18,6 +18,12 @@ An Android application built with **Kotlin** and the **Google Maps API** that al
 
 ---
 
+## 🎥 Demo Video
+ 
+https://www.youtube.com/watch?v=fy8J5tYL9I8
+
+---
+
 ## 🛠️ Tech Stack
 
 - **Language:** Kotlin  
@@ -87,9 +93,3 @@ You can view the app’s SQLite database directly from Android Studio:
    - `View > Tool Windows > Device Explorer`  
 3. Navigate to the database path:  
    - `bin/data/data/<package_name>/databases/<your_db_name>.db`
-
----
-
-## 🎥 Demo Video
- 
-https://www.youtube.com/watch?v=fy8J5tYL9I8
